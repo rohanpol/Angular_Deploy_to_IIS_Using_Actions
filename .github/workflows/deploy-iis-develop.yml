@@ -35,7 +35,7 @@ jobs:
         shell: powershell
         run: |
           $source = "dist\myGitActions\browser\*"
-          $destination = "C:\inetpub\wwwroot\GitActions"
+          $destination = "C:\inetpub\wwwroot\myGitActions"
 
           if (Test-Path $destination) {
             Remove-Item "$destination\*" -Recurse -Force

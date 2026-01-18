@@ -38,8 +38,4 @@ jobs:
 
           Copy-Item $source $destination -Recurse -Force
 
-      - name: Start IIS Website
-        shell: powershell
-        run: |
-          Import-Module WebAdministration
-          Start-WebSite -Name "myGitActions"
+     

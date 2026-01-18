@@ -1,4 +1,4 @@
-name: Deploy Angular to Local IIS (Develop)
+name: Deploy Angular to IIS (Develop)
 
 on:
   push:
@@ -7,7 +7,8 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted]
+    name: Build & Deploy to IIS
+    runs-on: [self-hosted, windows, iis]
 
     steps:
       - name: Checkout code
@@ -24,17 +25,26 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --configuration production
 
-      - name: Stop IIS Site
+      - name: Stop IIS Website
+        shell: powershell
         run: |
           Import-Module WebAdministration
           Stop-WebSite -Name "myGitActions"
 
-      - name: Deploy to IIS
+      - name: Deploy files to IIS
+        shell: powershell
         run: |
-          Remove-Item "C:\inetpub\wwwroot\GitActions\*" -Recurse -Force
-          Copy-Item "dist\myGitActions\browser\*" "C:\inetpub\wwwroot\GitActions\" -Recurse -Force
+          $source = "dist\myGitActions\browser\*"
+          $destination = "C:\inetpub\wwwroot\GitActions"
 
-      - name: Start IIS Site
+          if (Test-Path $destination) {
+            Remove-Item "$destination\*" -Recurse -Force
+          }
+
+          Copy-Item $source $destination -Recurse -Force
+
+      - name: Start IIS Website
+        shell: powershell
         run: |
           Import-Module WebAdministration
           Start-WebSite -Name "myGitActions"

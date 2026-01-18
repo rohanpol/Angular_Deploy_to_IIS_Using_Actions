@@ -25,17 +25,12 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --configuration production
 
-      - name: Stop IIS Website
-        shell: powershell
-        run: |
-          Import-Module WebAdministration
-          Stop-WebSite -Name "myGitActions"
-
+     
       - name: Deploy files to IIS
         shell: powershell
         run: |
           $source = "dist\myGitActions\browser\*"
-          $destination = "C:\inetpub\wwwroot\myGitActions"
+          $destination = "C:\inetpub\wwwroot\GitActions"
 
           if (Test-Path $destination) {
             Remove-Item "$destination\*" -Recurse -Force
